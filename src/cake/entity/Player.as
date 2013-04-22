@@ -58,7 +58,7 @@ package cake.entity
 			//Set the acceleration based on keypress
 			if (Input.check(Key.LEFT)) 			phys.acceleration.x = -phys.drag.x;
 			else if (Input.check(Key.RIGHT)) 	phys.acceleration.x = phys.drag.x;
-			else if (Input.check(Key.UP)) 		phys.acceleration.y = -phys.drag.y;
+			if (Input.check(Key.UP)) 			phys.acceleration.y = -phys.drag.y;
 			else if (Input.check(Key.DOWN)) 	phys.acceleration.y = phys.drag.y;
 			
 			//update the physics calculations
