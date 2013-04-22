@@ -10,7 +10,7 @@ package cake.entity
 	public class Player extends Entity
 	{
 		static public const KNIGHT:uint = 0;
-		static public const THEIF:uint = 1;
+		static public const THIEF:uint = 1;
 		static public const MAGE:uint = 2;
 		static public const ARCHER:uint = 3;
 		
