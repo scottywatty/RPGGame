@@ -1,11 +1,13 @@
 package cake.entity 
 {
+	import cake.tween.Physics;
 	import flash.display.*;
 	import flash.geom.*;
-	import org.axgl.*;
-	import org.axgl.input.AxKey;
+	import net.flashpunk.*;
+	import net.flashpunk.utils.*;
+	import net.flashpunk.graphics.Spritemap;
 	
-	public class Player extends AxSprite
+	public class Player extends Entity
 	{
 		static public const KNIGHT:uint = 0;
 		static public const THEIF:uint = 1;
@@ -16,45 +18,52 @@ package cake.entity
 		 * Create a new player object
 		 * @param	x		The x location of the player
 		 * @param	y		The y location of the player
-		 * @param	type
+		 * @param	aspect	The type of player to use.
 		 */
-		public function Player(x:int, y:int, type:uint) 
+		public function Player(x:int, y:int, aspect:uint) 
 		{
 			var buf:BitmapData = new BitmapData(32, 8, true, 0x00000000);
-			buf.copyPixels(R.getBitmap(R.CHARS), new Rectangle(xVals[type], 232, 32, 8), new Point());
+			buf.copyPixels(FP.getBitmap(R.CHARS), new Rectangle(xVals[aspect], 232, 32, 8), new Point());
 			
-			this.type = type;
+			anim = new Spritemap(buf, 8, 8);
+			anim.add("right", [0], 0);
+			anim.add("down", [1], 0);
+			anim.add("left", [2], 0);
+			anim.add("up", [3], 0);
+			anim.play("right");
 			
-			super(x, y);
-			load(buf, 8, 8);
-			addAnimation("right", [0], 0);
-			addAnimation("down", [1], 0);
-			addAnimation("left", [2], 0);
-			addAnimation("up", [3], 0);
+			this.aspect = aspect;
+			super(x, y, anim);
+			setHitbox(8, 6, 0, -2);
 			
-			maxVelocity = new AxVector(100, 100);
-			drag = new AxVector(maxVelocity.x * 8, maxVelocity.y * 8);
-			
-			buf.dispose();
-			buf = null;
+			phys = new Physics();
+			phys.maxVelocity = new Point(50, 50);
+			phys.drag = new Point(phys.maxVelocity.x * 8, phys.maxVelocity.y * 8);
 		}
 		override public function update():void 
 		{
-			acceleration.x = acceleration.y = 0;
+			phys.acceleration.x = phys.acceleration.y = 0;
 			
-			if (Ax.keys.down(AxKey.LEFT)) 		acceleration.x = -drag.x;
-			else if (Ax.keys.down(AxKey.RIGHT)) acceleration.x = drag.x;
-			else if (Ax.keys.down(AxKey.UP)) 	acceleration.y = -drag.y;
-			else if (Ax.keys.down(AxKey.DOWN)) 	acceleration.y = drag.y;
+			if (Input.check(Key.LEFT)) 			phys.acceleration.x = -phys.drag.x;
+			else if (Input.check(Key.RIGHT)) 	phys.acceleration.x = phys.drag.x;
+			else if (Input.check(Key.UP)) 		phys.acceleration.y = -phys.drag.y;
+			else if (Input.check(Key.DOWN)) 	phys.acceleration.y = phys.drag.y;
 			
-			super.update();
+			phys.update();
+			moveBy(phys.x, phys.y, "solid");
 			
-			if (velocity.x != 0) direction = (velocity.x > 0) ? "right" : "left";
-			else if (velocity.y != 0) direction = (velocity.y < 0) ? "up" : "down";
+			if (phys.velocity.x != 0) direction = (phys.velocity.x > 0) ? "right" : "left";
+			else if (phys.velocity.y != 0) direction = (phys.velocity.y < 0) ? "up" : "down";
 			
-			animate(direction);
+			anim.play(direction);
+			
+			world.camera.x = (x - FP.halfWidth); //FP.lerp(world.camera.x, (x - FP.halfWidth), 3 * FP.elapsed);
+			world.camera.y = (y - FP.halfHeight); // FP.lerp(world.camera.y, (y - FP.halfHeight), 3 * FP.elapsed);
 		}
-		private var type:uint;
+		//private var type:uint;
+		private var aspect:uint;
+		private var phys:Physics;
+		private var anim:Spritemap;
 		private var direction:String = "right";
 		static private const xVals:Array = [32, 96, 64, 0];
 	}

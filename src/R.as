@@ -5,14 +5,8 @@ package
 	public class R 
 	{
 		//This is how you 'embed' an image
-		[Embed(source = "../res/lofi_char.png")] static public const CHARS:Class;
-		
-		//Simple caching function. Use this to get the image in a usable format
-		static public function getBitmap(bitmap:Class):BitmapData
-		{
-			if (!cache[bitmap]) cache[bitmap] = (new bitmap()).bitmapData;
-			return cache[bitmap];
-		}
-		static private var cache:Object = new Object();
+		[Embed(source = "../res/img/lofi_char.png")] static public const CHARS:Class;
+		[Embed(source = "../res/img/lofi_environment.png")] static public const TILES:Class;
+		[Embed(source = "../res/map/Dungeon1.oel", mimeType = "application/octet-stream")] static public const D_1:Class;
 	}
 }

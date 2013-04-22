@@ -1,16 +1,17 @@
 package 
 {
 	import cake.Game;
-	import org.axgl.Ax;
+	import net.flashpunk.*;
 	
 	//Extend the engine
-	public class Main extends Ax
+	public class Main extends Engine
 	{
-		//Constructor
-		public function Main():void
+		public function Main():void { super(160, 120); }
+		override public function init():void 
 		{
-			//Start the game in the 'Game' state, with a window size of 640x480, draw buffer scaled up by 4
-			super(Game, 640, 480, 4);
+			FP.screen.scale = 4;
+			FP.console.enable();
+			FP.world = new Game;
 		}
 	}
 }
