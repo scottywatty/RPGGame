@@ -1,6 +1,5 @@
 package cake 
 {
-	import adobe.utils.CustomActions;
 	import cake.entity.Player;
 	import net.flashpunk.*;
 	import net.flashpunk.graphics.Tilemap;
