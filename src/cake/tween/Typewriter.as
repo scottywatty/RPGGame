@@ -9,7 +9,7 @@ package cake.tween
 	 * Old-school "typewriter" style text.
 	 * @author DelishusCake
 	 */
-	public class Dialog extends Tween
+	public class Typewriter extends Tween
 	{
 		/**
 		 * The key the user must press to go to the next page (or skip to the end).
@@ -37,7 +37,7 @@ package cake.tween
 		 * @param	pageComplete	The function to call at the end of each page.
 		 * @param	complete		The function to call when all the text has been displayed.
 		 */
-		public function Dialog(speed:Number = 0.02, pageComplete:Function = null, complete:Function = null) 
+		public function Typewriter(speed:Number = 0.02, pageComplete:Function = null, complete:Function = null) 
 		{
 			super(1, PERSIST, complete);
 			_pageDone = pageComplete;

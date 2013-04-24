@@ -55,27 +55,33 @@ package cake.entity
 			//Reset acceleration
 			phys.acceleration.x = phys.acceleration.y = 0;
 			
-			//Set the acceleration based on keypress
-			if (Input.check(Key.LEFT)) 			phys.acceleration.x = -phys.drag.x;
-			else if (Input.check(Key.RIGHT)) 	phys.acceleration.x = phys.drag.x;
-			if (Input.check(Key.UP)) 			phys.acceleration.y = -phys.drag.y;
-			else if (Input.check(Key.DOWN)) 	phys.acceleration.y = phys.drag.y;
-			
+			//Set the acceleration and animation based on keypress
+			if (Input.check(Key.UP))
+			{
+				phys.acceleration.y = -phys.drag.y;
+				direction = "up";
+			}
+			else if (Input.check(Key.DOWN))
+			{
+				phys.acceleration.y = phys.drag.y;
+				direction = "down";
+			}
+			if (Input.check(Key.LEFT)) 
+			{
+				phys.acceleration.x = -phys.drag.x;
+				direction = "left";
+			}
+			else if (Input.check(Key.RIGHT))
+			{
+				phys.acceleration.x = phys.drag.x;
+				direction = "right";
+			}
+			//Play the animation that coresponds to the direction
+			anim.play(direction);
 			//update the physics calculations
 			phys.update();
 			//Move where physics tells us to, checking for collisions with solid objects each time we move
 			moveBy(phys.x, phys.y, "solid");
-			
-			//Get the direction based on velocity
-			if (phys.velocity.x != 0) direction = (phys.velocity.x > 0) ? "right" : "left";
-			else if (phys.velocity.y != 0) direction = (phys.velocity.y < 0) ? "up" : "down";
-			
-			//Play the animation that coresponds to the direction
-			anim.play(direction);
-			
-			//Set the camera (center us on the screen)
-			world.camera.x = (x - FP.halfWidth); //FP.lerp(world.camera.x, (x - FP.halfWidth), 3 * FP.elapsed);
-			world.camera.y = (y - FP.halfHeight); // FP.lerp(world.camera.y, (y - FP.halfHeight), 3 * FP.elapsed);
 		}
 		/**
 		 * Called when the player collides with something on the x axis
@@ -101,7 +107,6 @@ package cake.entity
 			//Prevent further movement (false ignores collisions)
 			return true;
 		}
-		//private var type:uint;
 		private var aspect:uint;
 		private var phys:Physics;
 		private var anim:Spritemap;

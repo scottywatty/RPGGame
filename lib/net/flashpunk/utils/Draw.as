@@ -436,14 +436,16 @@
 		 * @param	y		Y position.
 		 * @param	options		Options (see Text constructor).
 		 */
-		public static function text (text:String, x:Number = 0, y:Number = 0, options:Object = null):void
+		public static function text(text:String, x:Number = 0, y:Number = 0, options:Object = null):void
 		{
-			var textGfx:Text = new Text(text, x, y, options);
-
-			textGfx.render(_target, FP.zero, _camera);
+			if (!_textCache[text]) _textCache[text] = new Text(text, x, y, options);
+			_textCache[text].x = x;
+			_textCache[text].y = y;
+			_textCache[text].render(_target, FP.zero, _camera);
 		}
 		
 		// Drawing information.
+		/** @private */ private static var _textCache:Object = { };
 		/** @private */ private static var _target:BitmapData;
 		/** @private */ private static var _camera:Point;
 		/** @private */ private static var _graphics:Graphics = FP.sprite.graphics;
