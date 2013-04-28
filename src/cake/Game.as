@@ -1,27 +1,27 @@
 package cake 
 {
-	import cake.entity.Dialog;
-	import cake.entity.Player;
+	import cake.entity.*;
+	import cake.entity.enemies.*;
 	import net.flashpunk.*;
-	import net.flashpunk.graphics.Text;
-	import net.flashpunk.graphics.Tilemap;
-	import net.flashpunk.masks.Grid;
-	import net.flashpunk.utils.Draw;
-	import net.flashpunk.utils.Input;
-	import net.flashpunk.utils.Key;
+	import net.flashpunk.graphics.*;
+	import net.flashpunk.masks.*;
+	import net.flashpunk.utils.*;
 	
 	/**
 	 * The game is organized into 'world'. For instance you might have a world for the menu and the game
 	 */
 	public class Game extends World
 	{
+		//Paused flag
 		public var paused:Boolean = false;
 		//Dialog box. Use 'dialog.say()' to have it popup. All enemies and the player are paused while it is open.
 		public var dialog:Dialog;
 		//The player object
-		public var player:Player;
+		static public var player:Player;
 		//The map entity
 		public var map:Entity;
+		//Holder for all the enemies in the level
+		public var enemies:Vector.<Enemy>;
 		//Called when the game switches to this state
 		override public function begin():void 
 		{
@@ -35,11 +35,16 @@ package cake
 			dialog = new Dialog();
 			//Create the player at his/her/it/whatever's position from the level data
 			player = new Player(playerXML.@x, playerXML.@y, Player.KNIGHT);
+			//Initialize the enemy holder
+			enemies = new Vector.<Enemy>();
 			
 			//Add the map
 			add(map);
 			//Add the player 
 			add(player);
+			//Create a new enemy
+			createEnemy(256, 184, Goblin);
+			createEnemy(256 - 32, 184, Skeleton);
 			//Add the dialog popup
 			add(dialog);
 			
@@ -71,7 +76,22 @@ package cake
 			var e:Entity = new Entity(0, 0, tiles, grid);
 			//Allow the player to collide with it
 			e.type = "solid";
+			e.layer = -e.y;
 			//return it
+			return e;
+		}
+		/**
+		 * Create a new enemy or recycle one already created
+		 * @param	x
+		 * @param	y
+		 * @param	add
+		 * @return
+		 */
+		public function createEnemy(x:int, y:int, type:Class, add:Boolean = true):Enemy
+		{
+			var e:Enemy = create(type, add) as Enemy;
+			e.reset(x, y);
+			if (enemies.indexOf(e) == -1) enemies.push(e);
 			return e;
 		}
 		override public function update():void 
@@ -83,6 +103,8 @@ package cake
 			{
 				//Make sure the player can't move if the dialog box is showing
 				player.active = !dialog.active;
+				for (var i:int = 0; i < enemies.length; i++)
+					enemies[i].active = !dialog.active;
 				//Update everything
 				super.update();
 				//Set the camera to center the player
@@ -94,11 +116,16 @@ package cake
 		{
 			//Render everything
 			super.render();
+			
+			//Set the drawing target to the drawing buffer
+			Draw.setTarget(FP.buffer);
+			Draw.rect(2, 2, 52, 7);
+			Draw.rect(3, 3, player.health >> 1, 5, 0xFF0000);
+			
 			//Draw a nice pause screen if the game is paused
 			if (paused)
 			{
-				//Set the drawing target to the drawing buffer
-				Draw.setTarget(FP.buffer);
+
 				//Draw a rectangle over the whole screen
 				Draw.rect(0, 0, FP.width, FP.height, 0x000000, 0.75);
 				//Draw the paused Text
