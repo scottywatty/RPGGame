@@ -1,6 +1,7 @@
 package cake 
 {
 	import cake.entity.*;
+	import cake.entity.hud.*;
 	import cake.entity.enemies.*;
 	import net.flashpunk.*;
 	import net.flashpunk.graphics.*;
@@ -21,7 +22,9 @@ package cake
 		//The map entity
 		public var map:Entity;
 		//Holder for all the enemies in the level
-		public var enemies:Vector.<Enemy>;
+		static public var enemies:Vector.<Enemy>;
+		//MiniMap!!!!
+		public var minimap:MiniMap;
 		//Called when the game switches to this state
 		override public function begin():void 
 		{
@@ -38,13 +41,16 @@ package cake
 			//Initialize the enemy holder
 			enemies = new Vector.<Enemy>();
 			
+			minimap = new MiniMap(map);
+			
 			//Add the map
 			add(map);
 			//Add the player 
 			add(player);
-			//Create a new enemy
+			//Create some enemies
 			createEnemy(256, 184, Goblin);
 			createEnemy(256 - 32, 184, Skeleton);
+			createEnemy(160, 32, Ghost); 
 			//Add the dialog popup
 			add(dialog);
 			
@@ -91,7 +97,7 @@ package cake
 		{
 			var e:Enemy = create(type, add) as Enemy;
 			e.reset(x, y);
-			if (enemies.indexOf(e) == -1) enemies.push(e);
+			enemies.push(e);
 			return e;
 		}
 		override public function update():void 
@@ -107,6 +113,7 @@ package cake
 					enemies[i].active = !dialog.active;
 				//Update everything
 				super.update();
+				minimap.update();
 				//Set the camera to center the player
 				camera.x = (player.x - FP.halfWidth);
 				camera.y = (player.y - FP.halfHeight);
@@ -117,6 +124,8 @@ package cake
 			//Render everything
 			super.render();
 			
+			minimap.render();
+			
 			//Set the drawing target to the drawing buffer
 			Draw.setTarget(FP.buffer);
 			Draw.rect(2, 2, 52, 7);
@@ -125,7 +134,6 @@ package cake
 			//Draw a nice pause screen if the game is paused
 			if (paused)
 			{
-
 				//Draw a rectangle over the whole screen
 				Draw.rect(0, 0, FP.width, FP.height, 0x000000, 0.75);
 				//Draw the paused Text

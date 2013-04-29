@@ -1,4 +1,4 @@
-package cake.entity 
+package cake.entity.hud 
 {
 	import cake.tween.Typewriter;
 	import net.flashpunk.Entity;

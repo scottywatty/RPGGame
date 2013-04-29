@@ -8,10 +8,31 @@ package cake.entity
 	
 	public class Enemy extends Entity 
 	{
+		/**
+		 * The speed the enemy moves at (pixels per second)
+		 */
 		public var speed:uint = 10;
+		/**
+		 * The health.
+		 */
 		public var health:int = 100;
+		/**
+		 * Time (in seconds) between attacks
+		 */
 		public var atttackTime:int = 1;
-		public var display:Spritemap;
+		/**
+		 * How close the playe rmust be before the enemy "sees" the player
+		 */
+		public var range:uint = 64;
+		/**
+		 * How close the player must be (in pixels) before the enemy attacks
+		 */
+		public var attackRange:uint = 4;
+		/**
+		 * The types the enemy can collide with
+		 */
+		public var collidables:Array = ["solid", "player", "enemy"];
+		
 		public function Enemy() 
 		{
 			display = new Spritemap(R.CHARS, 8, 8);
@@ -47,27 +68,30 @@ package cake.entity
 		public function die():void
 		{
 			world.recycle(this);
+			Game.enemies.splice(Game.enemies.indexOf(this), 1);
 		}
 		/**
 		 * Override this to attack the player
 		 */
-		public function attack():void {}
+		public function attack():void { }
 		
 		public function get distance():Number { return FP.distance(x, y, Game.player.x, Game.player.y); }
 		override public function update():void 
 		{
-			if (distance < 64)
+			if (distance < range)
 			{
-				moveTowards(Game.player.x, Game.player.y, speed * FP.elapsed, ["solid", "player", "enemy"]);
-				if (collide("player", x + (FP.sign(Game.player.x - x) * 4), y + (FP.sign(Game.player.y - y) * 4)) && canAttack)
+				moveTowards(Game.player.x, Game.player.y, speed * FP.elapsed, collidables);
+				if ((distance * -1) <= attackRange && canAttack)
 				{
 					attack();
 					canAttack = false;
 					FP.alarm(atttackTime, resetAttack);
 				}
+				display.flipped = (FP.sign(Game.player.x - x) < 0);
 			}
 			layer = -y;
 		}
+		private var display:Spritemap;
 		private var canAttack:Boolean = true;
 		private function resetAttack():void { canAttack = true; }
 		private function resetColor():void { display.color = 0xFFFFFF; }
