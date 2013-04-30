@@ -48,9 +48,9 @@ package cake
 			//Add the player 
 			add(player);
 			//Create some enemies
-			createEnemy(256, 184, Goblin);
-			createEnemy(256 - 32, 184, Skeleton);
-			createEnemy(160, 32, Ghost); 
+			for each(var s:XML in xml.objects.Skeleton) createEnemy(s.@x, s.@y, Skeleton);
+			for each(var go:XML in xml.objects.Goblin) 	createEnemy(go.@x, go.@y, Goblin);
+			for each(var gh:XML in xml.objects.Ghost) 	createEnemy(gh.@x, gh.@y, Ghost);
 			//Add the dialog popup
 			add(dialog);
 			

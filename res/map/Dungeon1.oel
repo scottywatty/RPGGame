@@ -732,6 +732,12 @@
   </tiles>
   <objects>
     <Player id="0" x="256" y="224" />
+    <Ghost id="1" x="152" y="24" />
+    <Ghost id="2" x="272" y="24" />
+    <Skeleton id="3" x="224" y="192" />
+    <Goblin id="4" x="288" y="192" />
+    <Boss1 id="5" x="56" y="112" />
+    <Goblin id="6" x="136" y="184" />
   </objects>
   <collides exportMode="Rectangles">
     <rect x="24" y="88" w="96" h="8" />
