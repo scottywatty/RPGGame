@@ -1,12 +1,9 @@
 package cake.entity.hud 
 {
-	import cake.tween.Typewriter;
-	import net.flashpunk.Entity;
-	import net.flashpunk.FP;
-	import net.flashpunk.graphics.Graphiclist;
-	import net.flashpunk.graphics.Image;
-	import net.flashpunk.graphics.Text;
-	import net.flashpunk.utils.Key;
+	import cake.tween.*;
+	import net.flashpunk.*;
+	import net.flashpunk.graphics.*;
+	import net.flashpunk.utils.*;
 	
 	public class Dialog extends Entity 
 	{

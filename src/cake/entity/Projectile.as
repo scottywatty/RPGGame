@@ -29,10 +29,10 @@ package cake.entity
 			b.speed = speed;
 			b.damage = damage;
 			
+			var angle:Number = FP.angle(x, y, to.x, to.y) * Math.PI / 180;
 			
-			
-			b.delta.x = Math.cos(FP.angle(x, y, to.x, to.y) * Math.PI / 180) * speed;
-			b.delta.y = Math.sin(FP.angle(x, y, to.x, to.y) * -Math.PI / 180) * speed;
+			b.delta.x = Math.cos(angle) * speed;
+			b.delta.y = Math.sin(-angle) * speed;
 			b.collidables = collidables ? collidables : ["solid"];
 		}
 		override public function update():void 

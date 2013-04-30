@@ -1,10 +1,9 @@
 package cake.entity 
 {
-	import cake.Game;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
+	import cake.*;
+	import flash.geom.*;
 	import net.flashpunk.*;
-	import net.flashpunk.graphics.Spritemap;
+	import net.flashpunk.graphics.*;
 	
 	public class Enemy extends Entity 
 	{
@@ -27,7 +26,7 @@ package cake.entity
 		/**
 		 * How close the player must be (in pixels) before the enemy attacks
 		 */
-		public var attackRange:uint = 4;
+		public var attackRange:uint = 8;
 		/**
 		 * The types the enemy can collide with
 		 */
@@ -81,7 +80,7 @@ package cake.entity
 			if (distance < range)
 			{
 				moveTowards(Game.player.x, Game.player.y, speed * FP.elapsed, collidables);
-				if ((distance * -1) <= attackRange && canAttack)
+				if (distance <= attackRange && canAttack)
 				{
 					attack();
 					canAttack = false;

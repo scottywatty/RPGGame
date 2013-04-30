@@ -1,10 +1,8 @@
 package cake.entity.enemies 
 {
-	import cake.entity.Enemy;
-	import cake.entity.Projectile;
-	import cake.Game;
-	import flash.geom.Point;
-	import net.flashpunk.FP;
+	import cake.*;
+	import cake.entity.*;
+	import flash.geom.*;
 	
 	public class Ghost extends Enemy 
 	{
