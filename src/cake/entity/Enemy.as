@@ -66,7 +66,7 @@ package cake.entity
 		 */
 		public function die():void
 		{
-			world.recycle(this);
+			world.remove(this);
 			Game.enemies.splice(Game.enemies.indexOf(this), 1);
 		}
 		/**

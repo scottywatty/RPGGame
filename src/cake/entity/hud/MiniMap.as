@@ -3,7 +3,6 @@ package cake.entity.hud
 	import cake.*;
 	import cake.entity.*;
 	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.geom.*;
 	import net.flashpunk.*;
 	import net.flashpunk.masks.Grid;
@@ -37,11 +36,14 @@ package cake.entity.hud
 			Draw.circlePlus(Game.player.x * ratio.x, Game.player.y * ratio.y, FP.halfWidth * ratio.x, 0xFFFFFF, 0.2); 
 			Draw.rect(Game.player.x * ratio.x, Game.player.y * ratio.y, 8 * ratio.x, 8 * ratio.y, 0x0000FF, 0.5);
 			
+			//Draw the boss (if there is one)
+			if (Game.boss) Draw.rect(Game.boss.x * ratio.x, Game.boss.y * ratio.y, 16 * ratio.x, 16 * ratio.y, 0xFF0000, 0.5);
+			
 			var e:Enemy;
 			for (var i:int = 0; i < Game.enemies.length; i++)
 			{
 				e = Game.enemies[i];
-				if(e.onCamera) Draw.rect(e.x * ratio.x, e.y * ratio.y, 8 * ratio.x, 8 * ratio.y, 0xFF0000, 0.5);
+				if(e.onCamera) Draw.rect(e.x * ratio.x, e.y * ratio.y, 8 * ratio.x, 8 * ratio.y, 0x660000, 0.5);
 			}
 			e = null;
 			

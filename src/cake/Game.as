@@ -1,6 +1,7 @@
 package cake 
 {
 	import cake.entity.*;
+	import cake.entity.bosses.*;
 	import cake.entity.hud.*;
 	import cake.entity.enemies.*;
 	import net.flashpunk.*;
@@ -19,10 +20,12 @@ package cake
 		public var dialog:Dialog;
 		//The player object
 		static public var player:Player;
-		//The map entity
-		public var map:Entity;
 		//Holder for all the enemies in the level
 		static public var enemies:Vector.<Enemy>;
+		//Boss enemy holder
+		static public var boss:Entity;
+		//The map entity
+		public var map:Entity;
 		//MiniMap!!!!
 		public var minimap:MiniMap;
 		//Called when the game switches to this state
@@ -40,7 +43,7 @@ package cake
 			player = new Player(playerXML.@x, playerXML.@y, Player.KNIGHT);
 			//Initialize the enemy holder
 			enemies = new Vector.<Enemy>();
-			
+			//Initialize the minimap (don't add it tho)
 			minimap = new MiniMap(map);
 			
 			//Add the map
@@ -51,11 +54,17 @@ package cake
 			for each(var s:XML in xml.objects.Skeleton) createEnemy(s.@x, s.@y, Skeleton);
 			for each(var go:XML in xml.objects.Goblin) 	createEnemy(go.@x, go.@y, Goblin);
 			for each(var gh:XML in xml.objects.Ghost) 	createEnemy(gh.@x, gh.@y, Ghost);
+			
+			if (xml.objects.Cyclops[0])
+			{
+				var c:XML = xml.objects.Cyclops[0];
+				boss = add(new Cyclops(c.@x, c.@y));
+			}
 			//Add the dialog popup
 			add(dialog);
 			
 			//Say the basic instructions
-			dialog.say("How To Play", ["Use the ARROW KEYS to MOVE", "ATTACK with Z, BLOCK with X"]);
+			dialog.say("How To Play", ["Use the ARROW KEYS to MOVE", "ATTACK with Z, BLOCK with X", "OPEN the MINIMAP with TAB"]);
 		}
 		/**
 		 * Create a map from level XML data
@@ -82,7 +91,6 @@ package cake
 			var e:Entity = new Entity(0, 0, tiles, grid);
 			//Allow the player to collide with it
 			e.type = "solid";
-			e.layer = -e.y;
 			//return it
 			return e;
 		}
@@ -93,9 +101,9 @@ package cake
 		 * @param	add
 		 * @return
 		 */
-		public function createEnemy(x:int, y:int, type:Class, add:Boolean = true):Enemy
+		public function createEnemy(x:int, y:int, type:Class):Enemy
 		{
-			var e:Enemy = create(type, add) as Enemy;
+			var e:Enemy = add(new type()) as Enemy;
 			e.reset(x, y);
 			enemies.push(e);
 			return e;
@@ -113,7 +121,7 @@ package cake
 					enemies[i].active = !dialog.active;
 				//Update everything
 				super.update();
-				minimap.update();
+				if(!dialog.active) minimap.update();
 				//Set the camera to center the player
 				camera.x = (player.x - FP.halfWidth);
 				camera.y = (player.y - FP.halfHeight);

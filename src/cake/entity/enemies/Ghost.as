@@ -12,7 +12,7 @@ package cake.entity.enemies
 			speed = 25;
 			image = new Point(8, 7);
 			range = 128;
-			attackRange = 16;
+			attackRange = 64;
 			collidables = ["player"];
 			super.reset(x, y);
 		}

@@ -57,6 +57,8 @@ package cake.entity
 		}
 		public function hit(damage:int):void
 		{
+			if (blocking) return;
+			
 			health -= damage;
 			if (health <= 0) die();
 		}
@@ -70,38 +72,44 @@ package cake.entity
 			phys.acceleration.x = phys.acceleration.y = 0;
 			
 			//Set the acceleration and animation based on keypress
-			if (Input.check(Key.UP))
+			if (!blocking)
 			{
-				phys.acceleration.y = -phys.drag.y;
-				direction = "up";
-			}
-			else if (Input.check(Key.DOWN))
-			{
-				phys.acceleration.y = phys.drag.y;
-				direction = "down";
-			}
-			else if (Input.check(Key.LEFT)) 
-			{
-				phys.acceleration.x = -phys.drag.x;
-				direction = "left";
-			}
-			else if (Input.check(Key.RIGHT))
-			{
-				phys.acceleration.x = phys.drag.x;
-				direction = "right";
+				if (Input.check(Key.UP))
+				{
+					phys.acceleration.y = -phys.drag.y;
+					direction = "up";
+				}
+				else if (Input.check(Key.DOWN))
+				{
+					phys.acceleration.y = phys.drag.y;
+					direction = "down";
+				}
+				else if (Input.check(Key.LEFT)) 
+				{
+					phys.acceleration.x = -phys.drag.x;
+					direction = "left";
+				}
+				else if (Input.check(Key.RIGHT))
+				{
+					phys.acceleration.x = phys.drag.x;
+					direction = "right";
+				}
 			}
 			
 			//Attack
-			if (Input.pressed(Key.Z))
+			if (Input.check(Key.X)) //Defend
 			{
-				if (aspect == KNIGHT)
+				blocking = true;
+			}else {
+				if (Input.pressed(Key.Z))
 				{
-					enemy = collide("enemy", x + xRange, y + yRange) as Enemy;
-					if (enemy) enemy.hit(5);
+					if (aspect == KNIGHT)
+					{
+						enemy = collide("enemy", x + xRange, y + yRange) as Enemy;
+						if (enemy) enemy.hit(5);
+					}
 				}
-			}else if (Input.pressed(Key.X)) //Defend
-			{
-				
+				blocking = false;
 			}
 			
 			//Play the animation that coresponds to the direction
@@ -149,6 +157,7 @@ package cake.entity
 			return 0;
 		}
 		private var enemy:Enemy;
+		private var blocking:Boolean = false;
 		
 		private var aspect:uint;
 		private var phys:Physics;
